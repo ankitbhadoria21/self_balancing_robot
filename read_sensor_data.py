@@ -18,7 +18,11 @@ set bit 3 to disable temperature sensor
 """
 def init_power(smb,addr,mode=0x00):
         smb.write_byte_data(addr,0x6B,mode)
-
+"""
+sample rate=gyro o/p(8 khz when dlpf is disabled else 1 khz)/1+divider
+"""
+def change_sample_rate_divider(smb,addr,divider):
+	smb.write_byte_data(addr,0x17,divider)
 
 def accelerometer_read(smb,addr,sensitivity):
         x_a=smb.read_byte_data(addr,0x3B)/sensitivity
@@ -39,7 +43,7 @@ bits 5 to 7 are for z,y,x accel. self test
 3=16g+-
 """
 def change_sensi_accel(smb,addr,sensi):
-	smb.write_byte(addr,0x1C,sensi)
+	smb.write_byte_data(addr,0x1C,sensi)
 
 """
 change bits 3 & 4 to change config
@@ -50,14 +54,14 @@ bits 5 to 7 are for z,y,x accel. self test
 3 2000 degree/s
 """
 def change_sensi_gyro(smb,addr,sensi):
-	smb.write_byte(addr,0x1B,sensi)
+	smb.write_byte_data(addr,0x1B,sensi)
 
 """
 change bits 0 to 2 for resetting temp,acclerometer & gyro respectively
 
 """
 def signal_path_reset(smb,addr,value):
-        smb.write(addr,0x68,value)
+        smb.write_byte_data(addr,0x68,value)
 
 def print_accel_value():
 	print("x_a y_a z_a",x_a,y_a,z_a)
