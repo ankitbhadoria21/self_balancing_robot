@@ -7,6 +7,7 @@ smb=smbus.SMBus(1)
 addr=0x68
 x_a=0;y_a=0;z_a=0;
 x_g=0;y_g=0;z_g=0;
+fifo_l=0
 
 """
 MPU 6050 is in sleep, it is done to wake it up & clock selection
