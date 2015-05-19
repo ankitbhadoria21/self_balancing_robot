@@ -82,3 +82,6 @@ def set_PID_status(val):
 	if pid_activate and val==0:
 		intialize()
 	pid_activate=val
+
+def set_Desiredvalue(val):
+	set_value=va
