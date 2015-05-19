@@ -84,4 +84,4 @@ def set_PID_status(val):
 	pid_activate=val
 
 def set_Desiredvalue(val):
-	set_value=va
+	set_value=val
