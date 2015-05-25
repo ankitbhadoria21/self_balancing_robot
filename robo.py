@@ -34,5 +34,5 @@ def balance():
     	calc_angle_gyro(x_g-gyro_offset_x,y_g-gyro_offset_y,z_g-gyro_offset_z)
 	complimentary_filter()
 	desired_angle=angle_chage_x
-
+	# TODO: main loop to keep the robot balaced
 		
