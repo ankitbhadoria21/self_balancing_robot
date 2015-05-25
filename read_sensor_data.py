@@ -7,7 +7,9 @@ smb=smbus.SMBus(1)
 addr=0x68
 x_a=0;y_a=0;z_a=0;
 x_g=0;y_g=0;z_g=0;
+gyro_offset_x=0;gyro_offset_y=0;gyro_offset_z=0;
 fifo_l=0
+accel_offset_x=0;accel_offset_y=0;accel_offset_z=0;
 
 """
 MPU 6050 is in sleep, it is done to wake it up & clock selection
@@ -18,21 +20,22 @@ set bit 3 to disable temperature sensor
 """
 def init_power(smb,addr,mode=0x00):
         smb.write_byte_data(addr,0x6B,mode)
+
 """
 sample rate=gyro o/p(8 khz when dlpf is disabled else 1 khz)/1+divider
 """
 def change_sample_rate_divider(smb,addr,divider):
 	smb.write_byte_data(addr,0x17,divider)
 
-def accelerometer_read(smb,addr,sensitivity):
+def accelerometer_read(smb,addr=0x68,sensitivity=16384):
         x_a=smb.read_byte_data(addr,0x3B)/sensitivity
         y_a=smb.read_byte_data(addr,0x3D)/sensitivity
         z_a=smb.read_byte_data(addr,0x3F)/sensitivity
 
-def gyro_read(smb,addr,sensi):
+def gyro_read(smb,addr=0x68,sensi=131):
         x_g=smb.read_byte_data(addr,0x43)/sensi
         y_g=smb.read_byte_data(addr,0x45)/sensi
-	z_g=smb.read_byte_data(addr,0x47)/sensi	
+    	z_g=smb.read_byte_data(addr,0x47)/sensi	
 
 """
 change bits 3 & 4 to change config
@@ -74,3 +77,23 @@ def FIFO_data_length(smb,addr):
 
 def who_am_i():
 	addr=smb.read_byte_data(addr,0x75)>>1
+
+def caliberate(smb,addr,mode):
+	init_power(smb,addr)
+	for i in range(100):
+		gyro_read(smb,addr)
+		accelerometer_read(smb,addr)
+		gyro_offset_x+=x_g		    
+    		gyro_offset_y+=y_g
+		gyro_offset_z+=z_g
+		accel_offset_x+=x_a
+		accel_offset_y+=y_a
+		accel_offset_z+=z_a
+		time.sleep(.1)
+	gyro_offset_x/=100
+	gyro_offset_y/=100
+	gyro_offset_z/=100
+	accel_offset_x/=100
+	accel_offset_y/=100
+	accel_offset_z/=100
+
