@@ -74,14 +74,3 @@ def FIFO_data_length(smb,addr):
 
 def who_am_i():
 	addr=smb.read_byte_data(addr,0x75)>>1
-	
-try:
-	init_power(smb,addr)
-	while 1:
-		accelerometer_read(smb,addr,16348)
-		print_accel_value()
-		gyro_read(smb,addr,131)
-		print_gyro_value()	
-		time.sleep(.1)	
-except KeyboardInterrupt:
-	exit()
