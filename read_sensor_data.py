@@ -38,17 +38,17 @@ def accelerometer_read(smb,addr=0x68,sensitivity=16384):
 	global x_a
 	global y_a
 	global z_a
-        x_a=read_byte_data_s(smb,addr,0x3B)/sensitivity
-        y_a=read_byte_data_s(smb,addr,0x3D)/sensitivity
-        z_a=read_byte_data_s(smb,addr,0x3F)/sensitivity
+        x_a=read_word_data_s(smb,addr,0x3B)/sensitivity
+        y_a=read_word_data_s(smb,addr,0x3D)/sensitivity
+        z_a=read_word_data_s(smb,addr,0x3F)/sensitivity
 
 def gyro_read(smb,addr=0x68,sensi=131):
 	global x_g
 	global y_g
 	global z_g
-        x_g=read_byte_data_s(smb,addr,0x43)/sensi
-        y_g=read_byte_data_s(smb,addr,0x45)/sensi
-    	z_g=read_byte_data_s(smb,addr,0x47)/sensi	
+        x_g=read_word_data_s(smb,addr,0x43)/sensi
+        y_g=read_word_data_s(smb,addr,0x45)/sensi
+    	z_g=read_word_data_s(smb,addr,0x47)/sensi	
 
 """
 change bits 3 & 4 to change config
@@ -89,14 +89,14 @@ def FIFO_data_length(smb,addr):
 	fifo_l=read_word_data(smb,addr,0x72)
 
 def who_am_i():
-	addr=read_byte_data_s(smb,addr,0x75)>>1
+	addr=read_word_data_s(smb,addr,0x75)>>1
 
-def caliberate(smb,addr,mode):
+def caliberate(smb,addr):
 	global accel_offset_x
 	global accel_offset_y
 	global accel_offset_z
 	init_power(smb,addr)
-	for i in range(100):
+	for i in range(150):
 		accelerometer_read(smb,addr)
 		accel_offset_x+=x_a
 		accel_offset_y+=y_a
