@@ -7,8 +7,8 @@ smb=smbus.SMBus(1)
 addr=0x68
 x_a=0;y_a=0;z_a=0;
 x_g=0;y_g=0;z_g=0;
-gyro_offset_x=0;gyro_offset_y=0;gyro_offset_z=0;
 fifo_l=0
+s_time=.02
 accel_offset_x=0;accel_offset_y=0;accel_offset_z=0;
 
 def read_word_data_s(smb,addr,reg):
@@ -38,9 +38,9 @@ def accelerometer_read(smb,addr=0x68,sensitivity=16384):
 	global x_a
 	global y_a
 	global z_a
-        x_a=read_word_data_s(smb,addr,0x3B)/sensitivity
-        y_a=read_word_data_s(smb,addr,0x3D)/sensitivity
-        z_a=read_word_data_s(smb,addr,0x3F)/sensitivity
+        x_a=read_word_data_s(smb,addr,0x3B)/sensitivity-accel_offset_x
+        y_a=read_word_data_s(smb,addr,0x3D)/sensitivity-accel_offset_y
+        z_a=read_word_data_s(smb,addr,0x3F)/sensitivity-accel_offset_z
 
 def gyro_read(smb,addr=0x68,sensi=131):
 	global x_g
@@ -86,7 +86,7 @@ def print_gyro_value():
 	print("x_g y_g z_g",x_g,y_g,x_g)
 
 def FIFO_data_length(smb,addr):
-	fifo_l=read_word_data(smb,addr,0x72)
+	fifo_l=read_word_data_s(smb,addr,0x72)
 
 def who_am_i():
 	addr=read_word_data_s(smb,addr,0x75)>>1
@@ -101,9 +101,8 @@ def caliberate(smb,addr):
 		accel_offset_x+=x_a
 		accel_offset_y+=y_a
 		accel_offset_z+=z_a
-		time.sleep(.1)
-	accel_offset_x/=100
-	accel_offset_y/=100
-	accel_offset_z/=100
+		time.sleep(s_time)
+	accel_offset_x/=150
+	accel_offset_y/=150
+	accel_offset_z/=150
 
-caliberate(smb,addr)
